@@ -1,33 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Todo from "./Todo";
 import NewTodo from "./NewTodo";
+import axios from "axios";
 
 function TodosUI() {
+	const [todos, setTodos] = useState([]);
 	const [displayPopUp, setDisplayPopUp] = useState(true);
-	const [todos, setTodos] = useState([
-		{
-			id: 1,
-			title: "todo1",
-			discription: "discription1",
-		},
-		{
-			id: 2,
-			title: "todo2",
-			discription: "discription2",
-		},
-		{
-			id: 3,
-			title: "todo3",
-			discription: "discription3",
-		},
-	]);
+	useEffect(() => {
+		fetch("http://localhost:3000/todos").then(async (response) => {
+			const data = await response.json();
+			setTodos(data);
+		});
+	}, []);
 	const close = () => {
 		setDisplayPopUp(true);
 		console.log("Close function");
 	};
+
 	const getSetTodos = (todo: any) => {
-		setTodos([...todos, todo]);
-		console.log("getSetTodos function");
+		axios.post("http://localhost:3000/todos", todo);
 	};
 	return (
 		<div className="flex flex-col bg-black text-white h-screen w-screen pt-4">
